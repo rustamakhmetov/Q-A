@@ -18,3 +18,8 @@ test:
   <<: *default
   database: qna_test
 
+production:
+  <<: *default
+  database: qna_production
+  username: qna_production
+  password: <%= ENV['QNA_DATABASE_PASSWORD'] %>

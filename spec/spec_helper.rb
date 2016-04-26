@@ -16,6 +16,9 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+#TODO: Autostart tests ( http://connect.thinknetica.com/t/topic/812/10?u=rustamakhmetov )
+
 require "bundler/setup"
 
 ::Bundler.require(:default, :test)

@@ -16,6 +16,22 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+#TODO: Autostart tests ( http://connect.thinknetica.com/t/topic/812/10?u=rustamakhmetov )
+
+require "bundler/setup"
+
+::Bundler.require(:default, :test)
+
+require "shoulda/matchers"
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
+  before_action :set_question, only: [:index, :create, :new, :destroy]
 
   def index
     @answers = Answer.all
@@ -17,6 +18,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = Answer.new(answer_params)
+    @answer.question = @question
     if @answer.save
       redirect_to @answer
     else
@@ -34,7 +36,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy
-    redirect_to answers_path
+    redirect_to question_answers_path(@question)
   end
 
   private
@@ -43,7 +45,11 @@ class AnswersController < ApplicationController
     @answer = Answer.find_by_id(params[:id])
   end
 
+  def set_question
+    @question = Question.find_by_id(params[:question_id])
+  end
+
   def answer_params
-    params.require(:answer).permit(:question_id, :body)
+    params.require(:answer).permit(:user_id, :body)
   end
 end

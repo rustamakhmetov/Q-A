@@ -32,6 +32,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #new' do
+    sign_in_user
+
     before { get 'new', question_id: question }
 
     it 'assigns a new Answer to @answer' do
@@ -44,6 +46,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #edit' do
+    sign_in_user
+
     before { get 'edit', id: answer}
 
     it 'assigns the requested answer to @answer' do
@@ -56,6 +60,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'with valid attributes' do
       it 'saves the new answer to database' do
         expect { post 'create', question_id: question, answer: attributes_for(:answer).merge(user_id: user) }.to change(question.answers, :count).by(1)
@@ -63,7 +69,8 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to show view' do
         post 'create', question_id: question, answer: attributes_for(:answer).merge(user_id: user)
-        expect(response).to redirect_to answer_path(assigns(:answer))
+        #expect(response).to redirect_to question_path(assigns(:answer))
+        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -80,6 +87,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    sign_in_user
+
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
         patch :update, id: answer, answer: attributes_for(:answer)
@@ -99,11 +108,13 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      before { patch :update, id: answer, answer: { body: nil}}
+      let!(:body) { answer.body }
+
+      before { patch :update, id: answer, answer: { body: nil} }
 
       it 'does not change answer attributes' do
         answer.reload
-        expect(answer.body).to eq 'MyText'
+        expect(answer.body).to eq body
       end
 
       it 're-renders edit view' do
@@ -113,7 +124,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    sign_in_user
+
     before { answer }
+
     it 'deletes answer' do
       expect {delete :destroy, id: answer, question_id: question}.to change(Answer, :count).by(-1)
     end

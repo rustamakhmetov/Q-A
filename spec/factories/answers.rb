@@ -1,8 +1,11 @@
 FactoryGirl.define do
+  sequence :body do |n|
+    "Answer #{n}"
+  end
+
   factory :answer do
     question
-    body "MyText"
-    #association :question, factory: :question, strategy: :build
+    body
   end
 
   factory :invalid_answer, class: "Answer" do

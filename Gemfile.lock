@@ -70,6 +70,7 @@ GEM
       railties (>= 4.1.0, < 5.1)
       responders
       warden (~> 1.2.3)
+    devise-i18n-views (0.3.7)
     diff-lcs (1.2.5)
     email_spec (2.0.0)
       htmlentities (~> 4.3.3)
@@ -237,6 +238,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   database_cleaner
   devise
+  devise-i18n-views
   email_spec
   factory_girl_rails
   jbuilder (~> 2.0)

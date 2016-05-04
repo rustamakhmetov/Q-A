@@ -7,7 +7,7 @@ FactoryGirl.define do
     title
     body "MyText"
     factory :question_with_answers do
-      ignore do
+      transient do
         answers_count 5
       end
       after :create do |question, evaluator|

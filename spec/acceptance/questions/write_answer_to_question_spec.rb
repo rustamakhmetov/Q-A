@@ -7,10 +7,7 @@ feature "Write answer to question", %q{
 } do
 
   given(:user) do
-    u = create(:user)
-    open_email(u.email)
-    current_email.click_link 'Confirm my account'
-    u
+    create(:user)
   end
 
   let(:question) { create(:question) }

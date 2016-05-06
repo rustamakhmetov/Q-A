@@ -128,7 +128,6 @@ RSpec.describe QuestionsController, type: :controller do
     before { question }
     it 'deletes question' do
       expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
-      expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
     end
 
     it 'redirects to index view' do

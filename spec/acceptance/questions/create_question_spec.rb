@@ -7,10 +7,7 @@ feature 'Create question', %q{
 } do
 
   given(:user) do
-    u = create(:user)
-    open_email(u.email)
-    current_email.click_link 'Confirm my account'
-    u
+    create(:user)
   end
 
   scenario 'Authenticated user create question' do

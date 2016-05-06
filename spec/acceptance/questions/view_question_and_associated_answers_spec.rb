@@ -6,10 +6,7 @@ feature "View question and associated answers", %q{
   I want to be able to view the question and answers to it
 } do
   given(:user) do
-    u = create(:user)
-    open_email(u.email)
-    current_email.click_link 'Confirm my account'
-    u
+    create(:user)
   end
 
   let(:question) { create(:question_with_answers) }

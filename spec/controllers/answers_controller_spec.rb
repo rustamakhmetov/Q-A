@@ -3,35 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question_with_answers, user: user) }
-  #let!(:answer) { create(:answer, user: user, question: question) }
   let(:answer) { question.answers.first }
-
-  describe 'GET #index' do
-    #let(:answers) { create_list(:answer, 2) }
-    let(:answers) { question.answers }
-
-    before { get :index, question_id: question }
-
-    it 'populates an array of all answers' do
-      expect(assigns(:answers)).to match_array(answers)
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #show' do
-    before { get :show, id: answer }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
 
   describe 'GET #new' do
     sign_in_user

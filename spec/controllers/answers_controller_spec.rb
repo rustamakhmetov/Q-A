@@ -37,18 +37,24 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves the new answer to database' do
-        expect { post 'create', question_id: question, answer: attributes_for(:answer).merge(user_id: @user) }.to change(question.answers, :count).by(1)
+        expect { post 'create', question_id: question, answer: attributes_for(:answer) }.to change(question.answers, :count).by(1)
+      end
+
+      it 'current user link to the new answer' do
+        post 'create', question_id: question, answer: attributes_for(:answer)
+        expect(assigns("answer").user).to eq @user
       end
 
       it 'redirects to show view' do
-        post 'create', question_id: question, answer: attributes_for(:answer).merge(user_id: @user)
+        post 'create', question_id: question, answer: attributes_for(:answer)
         expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect { post 'create', question_id: question, answer: attributes_for(:invalid_answer) }.to_not change(question.answers, :count)
+        question
+        expect { post 'create', question_id: question, answer: attributes_for(:invalid_answer) }.to_not change(Answer, :count)
       end
 
       it 're-renders new view' do
@@ -100,8 +106,13 @@ RSpec.describe AnswersController, type: :controller do
 
     before { answer }
 
-    it 'deletes answer' do
+    it 'author deletes answer' do
       expect {delete :destroy, id: answer, question_id: question}.to change(Answer, :count).by(-1)
+    end
+
+    it 'non-author deletes answer' do
+      new_answer = create(:answer, user: create(:user), question: question)
+      expect {delete :destroy, id: new_answer, question_id: question}.to_not change(Answer, :count)
     end
 
     it 'redirects to index view' do

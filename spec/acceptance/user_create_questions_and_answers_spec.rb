@@ -10,7 +10,7 @@ feature 'Create questions and answers', %q{
     create(:user)
   end
 
-  scenario 'Authenticated user create question and answers' do
+  scenario 'Authenticated user create question' do
     sign_in(user)
 
     visit questions_path
@@ -23,16 +23,17 @@ feature 'Create questions and answers', %q{
     expect(page).to have_content 'Вопрос успешно создан.'
     expect(page).to have_content 'Test question'
     expect(page).to have_content 'Body question'
+  end
+
+  scenario 'Authenticated user create answer' do
+    sign_in(user)
+
+    visit question_path(create(:question))
 
     fill_in 'Body', with: 'Answer body 1'
     click_on 'Ask answer'
     expect(page).to have_content 'Ответ успешно добавлен'
     expect(page).to have_content 'Answer body 1'
-
-    fill_in 'Body', with: 'Answer body 2'
-    click_on 'Ask answer'
-    expect(page).to have_content 'Ответ успешно добавлен'
-    expect(page).to have_content 'Answer body 2'
   end
 
   scenario 'Non-authenticated user create question and answers' do
@@ -43,10 +44,6 @@ feature 'Create questions and answers', %q{
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
 
     visit new_question_answer_path(question)
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
-
-    rack_test_session_wrapper = Capybara.current_session.driver
-    rack_test_session_wrapper.submit :post, question_answers_path(question), nil
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

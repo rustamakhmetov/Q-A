@@ -15,14 +15,16 @@ feature "User can view a list of questions", %q{
 
     questions = create_list(:question, 5)
     visit questions_path
-    expect(page).to have_content questions.first.title
-    expect(page).to have_content questions.last.title
+    questions.each do |question|
+      expect(page).to have_content question.title
+    end
   end
 
   scenario 'Non-authenticated user can view a list of questions' do
     questions = create_list(:question, 5)
     visit questions_path
-    expect(page).to have_content questions.first.title
-    expect(page).to have_content questions.last.title
+    questions.each do |question|
+      expect(page).to have_content question.title
+    end
   end
 end

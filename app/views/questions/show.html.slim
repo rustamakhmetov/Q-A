@@ -11,7 +11,13 @@ p
   - @question.answers.each do |answer|
     p
       = answer.body
+    - if author_of(answer)
+      p
+        = link_to "Delete answer #{answer.id}", answer_path(answer), method: :delete
 
+- if author_of(@question)
+    p
+      = link_to 'Delete question', question_path, method: :delete
 
 = form_for [@question ,@answer] do |f|
   p

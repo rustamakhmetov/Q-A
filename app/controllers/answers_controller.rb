@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
-  before_action :set_question, only: [:index, :create, :new, :destroy]
+  before_action :set_question, only: [:index, :create, :new]
 
   def index
     @answers = Answer.all
@@ -18,7 +18,7 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
       redirect_to @question, notice: "Ответ успешно добавлен"
     else
@@ -36,7 +36,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy
-    redirect_to question_answers_path(@question)
+    redirect_to question_path(@answer.question), notice: 'Ответ успешно удален.'
   end
 
   private
@@ -50,6 +50,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:user_id, :body)
+    params.require(:answer).permit(:body)
   end
 end

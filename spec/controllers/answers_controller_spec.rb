@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer) }
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:question) { create(:question_with_answers, user: user) }
+  #let!(:answer) { create(:answer, user: user, question: question) }
+  let(:answer) { question.answers.first }
 
   describe 'GET #index' do
-    let(:answers) { create_list(:answer, 2) }
+    #let(:answers) { create_list(:answer, 2) }
+    let(:answers) { question.answers }
 
     before { get :index, question_id: question }
 
@@ -69,14 +71,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to show view' do
         post 'create', question_id: question, answer: attributes_for(:answer).merge(user_id: user)
-        #expect(response).to redirect_to question_path(assigns(:answer))
         expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect { post 'create', question_id: question, answer: attributes_for(:invalid_answer) }.to_not change(Answer, :count)
+        expect { post 'create', question_id: question, answer: attributes_for(:invalid_answer) }.to_not change(question.answers, :count)
       end
 
       it 're-renders new view' do
@@ -134,7 +135,7 @@ RSpec.describe AnswersController, type: :controller do
 
     it 'redirects to index view' do
       delete :destroy, id: answer, question_id: question
-      expect(response).to redirect_to question_answers_path(question)
+      expect(response).to redirect_to question_path(question)
     end
   end
 

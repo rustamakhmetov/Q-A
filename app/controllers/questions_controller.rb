@@ -11,7 +11,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = Question.new(question_params.merge(user: current_user))
 
     if @question.save
       redirect_to @question, notice: 'Вопрос успешно создан.'
@@ -21,7 +21,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.build
+    @answer = Answer.new
   end
 
   def edit
@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     @question.destroy
-    redirect_to questions_path
+    redirect_to questions_path, notice: 'Вопрос успешно удален.'
   end
 
   private

@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # def author_of(model)
+  #   current_user == model.user if model.respond_to?(:user)
+  # end
+
   protected
 
   def configure_permitted_parameters

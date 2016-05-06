@@ -36,8 +36,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
-    redirect_to questions_path, notice: 'Вопрос успешно удален.'
+    if current_user.author_of(@question)
+      @question.destroy
+      message = 'Вопрос успешно удален.'
+    else
+      message = 'Запрешено удалять чужие вопросы.'
+    end
+    redirect_to questions_path, notice: message
   end
 
   private

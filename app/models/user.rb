@@ -7,4 +7,8 @@ class User < ActiveRecord::Base
   has_many :answers, dependent: :destroy
 
   validates :name, presence: true
+
+  def author_of(model)
+    id == model.user.id if model.respond_to?(:user)
+  end
 end

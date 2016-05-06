@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:question) { create(:question, user: @user || create(:user)) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
@@ -127,6 +127,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     before { question }
     it 'deletes question' do
+      expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
       expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
     end
 

@@ -28,8 +28,13 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_path(@answer.question), notice: 'Ответ успешно удален.'
+    if current_user.author_of(@answer)
+      @answer.destroy
+      message = 'Ответ успешно удален.'
+    else
+      message = 'Запрешено удалять чужие ответы.'
+    end
+    redirect_to question_path(@answer.question), notice: message
   end
 
   private

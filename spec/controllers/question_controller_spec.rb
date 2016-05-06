@@ -65,6 +65,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post 'create', question: attributes_for(:question) }.to change(Question, :count).by(1)
       end
 
+      it 'current user link to the new question' do
+        post 'create', question: attributes_for(:question)
+        expect(assigns("question").user).to eq @user
+      end
+
       it 'redirects to show view' do
         post 'create', question: attributes_for(:question)
         expect(response).to redirect_to question_path(assigns(:question))
@@ -126,8 +131,14 @@ RSpec.describe QuestionsController, type: :controller do
     sign_in_user
 
     before { question }
-    it 'deletes question' do
+
+    it 'author deletes question' do
       expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
+    end
+
+    it 'non-author deletes question' do
+      new_question = create(:question, user: create(:user))
+      expect {delete :destroy, id: new_question}.to_not change(Question, :count)
     end
 
     it 'redirects to index view' do

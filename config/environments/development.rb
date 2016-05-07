@@ -39,7 +39,7 @@ Rails.application.configure do
   Rails.application.routes.default_url_options[:host] = 'domain.com'
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  #config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :letter_opener
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end

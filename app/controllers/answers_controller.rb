@@ -1,21 +1,18 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_answer, only: [:edit, :update, :destroy]
-  before_action :set_question, only: [:create, :new]
-
-  def new
-    @answer = Answer.new
-  end
+  before_action :set_question, only: [:create]
 
   def edit
   end
 
   def create
-    @answer = @question.answers.new(answer_params.merge(user: current_user))
+    @answer = Answer.new(answer_params.merge(user: current_user, question: @question))
     if @answer.save
+      @question.answers << @answer
       redirect_to @question, notice: "Ответ успешно добавлен"
     else
-      render :new
+      render 'questions/show'
     end
   end
 
@@ -28,7 +25,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of(@answer)
+    if current_user.author_of?(@answer)
       @answer.destroy
       message = 'Ответ успешно удален.'
     else

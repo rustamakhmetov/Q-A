@@ -25,6 +25,19 @@ feature "Write answer to question", %q{
     expect(page).to have_content 'text text'
   end
 
+  scenario 'Authenticated user answer (with invalid attributes) to question' do
+    sign_in(user)
+
+    visit question_path(question)
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+
+    click_on 'Ask answer'
+    expect(page).to_not have_content 'Ответ успешно добавлен'
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+  end
+
   scenario 'Non-authenticated user can not answer to question' do
     visit question_path(question)
     click_on 'Ask answer'

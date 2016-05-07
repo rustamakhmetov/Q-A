@@ -10,6 +10,10 @@ feature 'Create questions and answers', %q{
     create(:user)
   end
 
+  given(:question) do
+    create(:question)
+  end
+
   scenario 'Authenticated user create question' do
     sign_in(user)
 
@@ -28,22 +32,21 @@ feature 'Create questions and answers', %q{
   scenario 'Authenticated user create answer' do
     sign_in(user)
 
-    visit question_path(create(:question))
-
+    visit question_path(question)
     fill_in 'Body', with: 'Answer body 1'
     click_on 'Ask answer'
+
     expect(page).to have_content 'Ответ успешно добавлен'
     expect(page).to have_content 'Answer body 1'
   end
 
   scenario 'Non-authenticated user create question and answers' do
-    question = create(:question)
-
     visit questions_path
     click_on 'Ask question'
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
 
-    visit new_question_answer_path(question)
+    visit question_path(question)
+    click_on 'Ask answer'
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

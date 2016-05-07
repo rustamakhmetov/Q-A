@@ -36,7 +36,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of(@question)
+    if current_user.author_of?(@question)
       @question.destroy
       message = 'Вопрос успешно удален.'
     else

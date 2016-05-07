@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   validates :name, presence: true
 
-  def author_of(model)
-    id == model.user.id if model.respond_to?(:user)
+  def author_of?(model)
+    model.respond_to?(:user_id) ? id == model.user_id : false
   end
 end

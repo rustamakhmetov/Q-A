@@ -11,11 +11,11 @@ p
   - @question.answers.each do |answer|
     p
       = answer.body
-    - if current_user && current_user.author_of(answer)
+    - if current_user && current_user.author_of?(answer)
       p
         = link_to "Delete answer #{answer.id}", answer, method: :delete
 
-- if current_user && current_user.author_of(@question)
+- if current_user && current_user.author_of?(@question)
     p
       = link_to 'Delete question', @question, method: :delete
 

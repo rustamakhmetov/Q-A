@@ -53,29 +53,29 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
-  describe 'POST #create' do
-    context 'with valid attributes' do
-      it 'saves the new user to database' do
-        expect { post 'create', user: attributes_for(:user) }.to change(User, :count).by(1)
-      end
-
-      it 'redirects to show view' do
-        post 'create', user: attributes_for(:user)
-        expect(response).to redirect_to user_path(assigns(:user))
-      end
-    end
-
-    context 'with invalid attributes' do
-      it 'does not save the user' do
-        expect { post 'create', user: attributes_for(:invalid_user) }.to_not change(User, :count)
-      end
-
-      it 're-renders new view' do
-        post 'create', user: attributes_for(:invalid_user)
-        expect(response).to render_template :new
-      end
-    end
-  end
+  # describe 'POST #create' do
+  #   context 'with valid attributes' do
+  #     it 'saves the new user to database' do
+  #       expect { post 'create', user: attributes_for(:user) }.to change(User, :count).by(1)
+  #     end
+  #
+  #     it 'redirects to show view' do
+  #       post 'create', user: attributes_for(:user)
+  #       expect(response).to redirect_to user_path(assigns(:user))
+  #     end
+  #   end
+  #
+  #   context 'with invalid attributes' do
+  #     it 'does not save the user' do
+  #       expect { post 'create', user: attributes_for(:invalid_user) }.to_not change(User, :count)
+  #     end
+  #
+  #     it 're-renders new view' do
+  #       post 'create', user: attributes_for(:invalid_user)
+  #       expect(response).to render_template :new
+  #     end
+  #   end
+  # end
 
   describe 'PATCH #update' do
     context 'with valid attributes' do

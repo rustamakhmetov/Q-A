@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -10,7 +11,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = Question.new(question_params.merge(user: current_user))
 
     if @question.save
       redirect_to @question, notice: 'Вопрос успешно создан.'
@@ -20,6 +21,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answer = Answer.new
   end
 
   def edit
@@ -34,8 +36,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
-    redirect_to questions_path
+    if current_user.author_of?(@question)
+      @question.destroy
+      message = 'Вопрос успешно удален.'
+    else
+      message = 'Запрешено удалять чужие вопросы.'
+    end
+    redirect_to questions_path, notice: message
   end
 
   private

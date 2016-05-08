@@ -1,0 +1,27 @@
+p
+  | Title:
+  = @question.title
+
+p
+  | Body:
+  = @question.body
+
+p
+  | Answers:
+  - @question.answers.each do |answer|
+    p
+      = answer.body
+    - if current_user && current_user.author_of?(answer)
+      p
+        = link_to "Delete answer #{answer.id}", answer, method: :delete
+
+- if current_user && current_user.author_of?(@question)
+    p
+      = link_to 'Delete question', @question, method: :delete
+
+= form_for [@question ,@answer] do |f|
+  p
+    = f.label :body
+    = f.text_area :body
+  p
+    = f.submit 'Ask answer'

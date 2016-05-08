@@ -9,6 +9,6 @@ class User < ActiveRecord::Base
   validates :name, presence: true
 
   def author_of?(model)
-    model.respond_to?(:user_id) ? id == model.user_id : false
+    model.respond_to?(:user_id) && id == model.user_id
   end
 end

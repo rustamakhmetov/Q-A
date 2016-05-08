@@ -13,26 +13,26 @@ RSpec.describe User, type: :model do
 
     context 'with valid attributes'  do
       it 'author of Answer' do
-        expect(user.author_of?(create(:answer, user: user))).to eq true
+        expect(user).to be_author_of(create(:answer, user: user))
       end
 
       it 'non-author of Answer' do
-        expect(user.author_of?(answer)).to eq false
+        expect(user).to_not be_author_of(answer)
       end
     end
 
     context 'with invalid attributes'  do
       it 'Answer with nil user_id' do
         answer.user_id = nil
-        expect(user.author_of?(answer)).to eq false
+        expect(user).to_not be_author_of(answer)
       end
 
       it 'model is nil' do
-        expect(user.author_of?(nil)).to eq false
+        expect(user).to_not be_author_of(nil)
       end
 
       it 'fake model without field user_id' do
-        expect(user.author_of?("")).to eq false
+        expect(user).to_not be_author_of("")
       end
     end
   end

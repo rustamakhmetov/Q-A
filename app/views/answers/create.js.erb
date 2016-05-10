@@ -1,6 +1,11 @@
+$("p.alert").html('');
+$("p.notice").html('');
+
 <% flash.each do |type, message| %>
   $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>");
 <% end %>
 
-$(".answers").append("<%= j render @answer %>");
-$("#answer_body").val("");
+<% if @answer.errors.empty? %>
+  $(".answers").append("<%= j render @answer %>");
+  $("#answer_body").val("");
+<% end %>

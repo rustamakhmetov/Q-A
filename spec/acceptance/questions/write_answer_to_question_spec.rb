@@ -36,6 +36,7 @@ feature "Write answer to question", %q{
 
     click_on 'Ask answer'
     expect(page).to_not have_content 'Ответ успешно добавлен'
+    expect(page).to have_content "Body can't be blank"
     expect(page).to have_content question.title
     expect(page).to have_content question.body
   end

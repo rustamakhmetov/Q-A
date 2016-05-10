@@ -10,7 +10,7 @@ feature 'Create questions and answers', %q{
     create(:user)
   end
 
-  given(:question) do
+  given!(:question) do
     create(:question)
   end
 
@@ -29,11 +29,11 @@ feature 'Create questions and answers', %q{
     expect(page).to have_content 'Body question'
   end
 
-  scenario 'Authenticated user create answer' do
+  scenario 'Authenticated user create answer', js: true do
     sign_in(user)
 
     visit question_path(question)
-    fill_in 'Body', with: 'Answer body 1'
+    fill_in 'Your answer', with: 'Answer body 1'
     click_on 'Ask answer'
 
     expect(page).to have_content 'Ответ успешно добавлен'

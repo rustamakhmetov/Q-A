@@ -12,7 +12,7 @@ feature "Write answer to question", %q{
 
   let(:question) { create(:question) }
 
-  scenario 'Authenticated user answer to question' do
+  scenario 'Authenticated user answer to question', js:true do
     sign_in(user)
 
     visit question_path(question)
@@ -25,7 +25,7 @@ feature "Write answer to question", %q{
     expect(page).to have_content 'text text'
   end
 
-  scenario 'Authenticated user answer (with invalid attributes) to question' do
+  scenario 'Authenticated user answer (with invalid attributes) to question', js: true do
     sign_in(user)
 
     visit question_path(question)

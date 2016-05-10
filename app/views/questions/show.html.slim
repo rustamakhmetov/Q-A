@@ -6,22 +6,17 @@ p
   | Body:
   = @question.body
 
-p
+.answers
   | Answers:
-  - @question.answers.each do |answer|
-    p
-      = answer.body
-    - if current_user && current_user.author_of?(answer)
-      p
-        = link_to "Delete answer #{answer.id}", answer, method: :delete
+  = render 'answers'
 
 - if current_user && current_user.author_of?(@question)
     p
       = link_to 'Delete question', @question, method: :delete
 
-= form_for [@question ,@answer] do |f|
+= form_for [@question ,@answer], remote: true do |f|
   p
-    = f.label :body
+    = f.label :body, 'Your answer'
     = f.text_area :body
   p
     = f.submit 'Ask answer'

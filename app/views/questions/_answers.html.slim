@@ -1,0 +1,6 @@
+- @question.answers.each do |answer|
+    p
+      = answer.body
+      - if current_user && current_user.author_of?(answer)
+        p
+          = link_to "Delete answer #{answer.id}", answer, method: :delete

@@ -10,7 +10,10 @@ class AnswersController < ApplicationController
     @answer = Answer.new(answer_params.merge(user: current_user, question: @question))
     if @answer.save
       @question.answers << @answer
-      redirect_to @question, notice: "Ответ успешно добавлен"
+      # respond_to do |format|
+      #   format.html { redirect_to @question, notice: "Ответ успешно добавлен" }
+      #   format.json
+      # end
     else
       render 'questions/show'
     end

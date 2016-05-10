@@ -10,9 +10,9 @@ feature "Write answer to question", %q{
     create(:user)
   end
 
-  let(:question) { create(:question) }
+  given!(:question) { create(:question) }
 
-  scenario 'Authenticated user answer to question' do
+  scenario 'Authenticated user answer to question', js: true do
     sign_in(user)
 
     visit question_path(question)
@@ -22,10 +22,12 @@ feature "Write answer to question", %q{
     fill_in 'Body', with: 'text text'
     click_on 'Ask answer'
     expect(page).to have_content 'Ответ успешно добавлен'
-    expect(page).to have_content 'text text'
+    within '.answers' do
+      expect(page).to have_content 'text text'
+    end
   end
 
-  scenario 'Authenticated user answer (with invalid attributes) to question' do
+  scenario 'Authenticated user answer (with invalid attributes) to question', js:true do
     sign_in(user)
 
     visit question_path(question)

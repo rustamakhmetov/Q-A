@@ -61,4 +61,5 @@ group :test do
   gem 'launchy'
   gem 'capybara-email'
   gem 'email_spec'
+  gem 'selenium-webdriver'
 end

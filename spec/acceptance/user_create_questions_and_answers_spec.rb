@@ -29,15 +29,15 @@ feature 'Create questions and answers', %q{
     expect(page).to have_content 'Body question'
   end
 
-  scenario 'Authenticated user create answer' do
+  scenario 'Authenticated user create answer', js: true do
     sign_in(user)
 
     visit question_path(question)
     fill_in 'Body', with: 'Answer body 1'
     click_on 'Ask answer'
 
-    expect(page).to have_content 'Ответ успешно добавлен'
     expect(page).to have_content 'Answer body 1'
+    expect(page).to have_content 'Ответ успешно добавлен'
   end
 
   scenario 'Non-authenticated user create question and answers' do

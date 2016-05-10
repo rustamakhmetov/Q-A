@@ -10,7 +10,7 @@ class AnswersController < ApplicationController
     @answer = Answer.new(answer_params.merge(user: current_user, question: @question))
     if @answer.save
       @question.answers << @answer
-      redirect_to @question, notice: "Ответ успешно добавлен"
+      flash[:success] = "Ответ успешно добавлен"
     else
       render 'questions/show'
     end

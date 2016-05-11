@@ -7,12 +7,11 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = Answer.new(answer_params.merge(user: current_user, question: @question))
+    @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
-      @question.answers << @answer
-      redirect_to @question, notice: "Ответ успешно добавлен"
+      flash[:success] = "Ответ успешно добавлен"
     else
-      render 'questions/show'
+      flash[:error] = @answer.errors.full_messages.join("\n")
     end
   end
 

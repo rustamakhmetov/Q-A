@@ -1,4 +1,4 @@
-require "rails_helper"
+require_relative '../acceptance_helper'
 
 feature "User can view a list of questions", %q{
   In order to be able to solve my problem

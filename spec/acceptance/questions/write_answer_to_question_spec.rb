@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'acceptance/acceptance_helper'
 
 feature "Write answer to question", %q{
   In order to be able to help solve the problem

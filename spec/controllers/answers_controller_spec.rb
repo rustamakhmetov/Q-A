@@ -56,26 +56,27 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
-        patch :update, id: answer, answer: attributes_for(:answer)
+        patch :update, id: answer, answer: attributes_for(:answer), format: :js
         expect(assigns(:answer)).to eq answer
       end
 
       it 'change answer attributes' do
-        patch :update, id: answer, answer: { body: 'new body 43433'}
+        patch :update, id: answer, answer: { body: 'new body 43433'}, format: :js
         answer.reload
         expect(answer.body).to eq 'new body 43433'
       end
 
       it 'redirects to the updated answer' do
-        patch :update, id: answer, answer: attributes_for(:answer)
-        expect(response).to redirect_to answer
+        patch :update, id: answer, answer: attributes_for(:answer), format: :js
+        expect(response).to render_template "update"
+        #expect(:get => question_path, :controller => "questions").to be_routable
       end
     end
 
     context 'with invalid attributes' do
       let!(:body) { answer.body }
 
-      before { patch :update, id: answer, answer: { body: nil} }
+      before { patch :update, id: answer, answer: { body: nil}, format: :js }
 
       it 'does not change answer attributes' do
         answer.reload

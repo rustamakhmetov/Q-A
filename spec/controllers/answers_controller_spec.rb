@@ -54,38 +54,85 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     sign_in_user
 
-    context 'with valid attributes' do
-      it 'assigns the requested answer to @answer' do
-        patch :update, id: answer, answer: attributes_for(:answer), format: :js
-        expect(assigns(:answer)).to eq answer
+    describe 'by Author' do
+      context 'with valid attributes' do
+        it 'assigns the requested answer to @answer' do
+          attributes = answer.attributes.symbolize_keys.slice(*attributes_for(:answer).keys)
+          patch :update, id: answer, answer: attributes, format: :js
+          expect(assigns(:answer)).to eq answer
+          expect(assigns(:answer).body).to eq answer.body
+        end
+
+        it 'change answer attributes' do
+          patch :update, id: answer, answer: { body: 'new body 43433'}, format: :js
+          answer.reload
+          expect(answer.body).to eq 'new body 43433'
+        end
+
+        it 'render updated answer' do
+          patch :update, id: answer, answer: attributes_for(:answer), format: :js
+          expect(response).to render_template 'update'
+        end
       end
 
-      it 'change answer attributes' do
-        patch :update, id: answer, answer: { body: 'new body 43433'}, format: :js
-        answer.reload
-        expect(answer.body).to eq 'new body 43433'
-      end
+      context 'with invalid attributes' do
+        let!(:body) { answer.body }
 
-      it 'render updated answer' do
-        patch :update, id: answer, answer: attributes_for(:answer), format: :js
-        expect(response).to render_template 'update'
+        before { patch :update, id: answer, answer: { body: nil}, format: :js }
+
+        it 'does not change answer attributes' do
+          answer.reload
+          expect(answer.body).to eq body
+        end
+
+        it 're-renders edit view' do
+          expect(response).to render_template :edit
+        end
       end
     end
 
-    context 'with invalid attributes' do
-      let!(:body) { answer.body }
+    describe 'by Non-author' do
+      let(:new_answer) {create(:answer, question: answer.question, user: create(:user))}
+      #let(:attributes) { new_answer.attributes.symbolize_keys.slice(*attributes_for(:answer).keys) }
 
-      before { patch :update, id: answer, answer: { body: nil}, format: :js }
+      context 'with valid attributes' do
 
-      it 'does not change answer attributes' do
-        answer.reload
-        expect(answer.body).to eq body
+        it 'assigns the requested answer to @answer' do
+          patch :update, id: new_answer, answer: { body: new_answer.body}, format: :js
+          expect(assigns(:answer)).to eq new_answer
+          expect(assigns(:answer).body).to eq new_answer.body
+        end
+
+        it 'not change answer attributes' do
+          body = new_answer.body
+          patch :update, id: new_answer, answer: { body: 'new body 43433'}, format: :js
+          new_answer.reload
+          expect(new_answer.body).to eq body
+          expect(flash[:error]).to eq "Only the author can edit answer"
+        end
+
+        it 'render updated answer' do
+          patch :update, id: new_answer, answer: { body: new_answer.body}, format: :js
+          expect(response).to render_template 'update'
+        end
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      context 'with invalid attributes' do
+        before { patch :update, id: new_answer, answer: { body: nil}, format: :js }
+
+        it 'does not change answer attributes' do
+          body = new_answer.body
+          new_answer.reload
+          expect(new_answer.body).to eq body
+          expect(flash[:error]).to eq "Only the author can edit answer"
+        end
+
+        it 're-renders update view' do
+          expect(response).to render_template 'update'
+        end
       end
     end
+
   end
 
   describe 'DELETE #destroy' do

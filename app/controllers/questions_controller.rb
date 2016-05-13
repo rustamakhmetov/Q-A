@@ -28,10 +28,14 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question, notice: 'Вопрос успешно обновлен.'
+    if current_user.author_of?(@question)
+      if @question.update(question_params)
+        flash[:success] = "Вопрос успешно обновлен."
+      else
+        render :edit
+      end
     else
-      render :edit
+      flash[:error] = "Only the author can edit question"
     end
   end
 

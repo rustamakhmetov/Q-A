@@ -91,38 +91,82 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'PATCH #update' do
     sign_in_user
 
-    context 'with valid attributes' do
-      it 'assigns the requested question to @question' do
-        patch :update, id: question, question: attributes_for(:question)
-        expect(assigns(:question)).to eq question
+    context "by Author" do
+      context 'with valid attributes' do
+        it 'assigns the requested question to @question' do
+          patch :update, id: question, question: attributes_for(:question), format: :js
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'change question attributes' do
+          patch :update, id: question, question: { title: 'new title 2322', body: 'new body 43433'}, format: :js
+          question.reload
+          expect(question.title).to eq 'new title 2322'
+          expect(question.body).to eq 'new body 43433'
+          expect(flash[:success]).to eq "Вопрос успешно обновлен."
+        end
+
+        it 'render template "update" for the updated question' do
+          patch :update, id: question, question: attributes_for(:question), format: :js
+          expect(response).to render_template 'update'
+        end
       end
 
-      it 'change question attributes' do
-        patch :update, id: question, question: { title: 'new title 2322', body: 'new body 43433'}
-        question.reload
-        expect(question.title).to eq 'new title 2322'
-        expect(question.body).to eq 'new body 43433'
-      end
+      context 'with invalid attributes' do
+        let!(:title) { question.title }
 
-      it 'redirects to the updated question' do
-        patch :update, id: question, question: attributes_for(:question)
-        expect(response).to redirect_to question
+        before { patch :update, id: question, question: { title: 'new title', body: nil}, format: :js }
+
+        it 'does not change question attributes' do
+          question.reload
+          expect(question.title).to eq title
+          expect(question.body).to eq 'MyText'
+        end
+
+        it 're-renders edit view' do
+          expect(response).to render_template :edit
+        end
       end
     end
 
-    context 'with invalid attributes' do
-      let!(:title) { question.title }
+    context "by Non-author" do
+      let(:new_question) { create(:question, user: create(:user)) }
+      let(:title) { new_question.title }
+      let(:body) { new_question.body }
 
-      before { patch :update, id: question, question: { title: 'new title', body: nil} }
+      context 'with valid attributes' do
+        it 'assigns the requested question to @question' do
+          patch :update, id: new_question, question: attributes_for(:question), format: :js
+          expect(assigns(:question)).to eq new_question
+        end
 
-      it 'does not change question attributes' do
-        question.reload
-        expect(question.title).to eq title
-        expect(question.body).to eq 'MyText'
+        it 'not change question attributes' do
+          patch :update, id: new_question, question: { title: 'new title 2322', body: 'new body 43433'}, format: :js
+          question.reload
+          expect(new_question.title).to eq title
+          expect(new_question.body).to eq body
+          expect(flash[:error]).to eq "Only the author can edit question"
+        end
+
+        it 'render template "update"' do
+          patch :update, id: new_question, question: attributes_for(:question), format: :js
+          expect(response).to render_template 'update'
+        end
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      context 'with invalid attributes' do
+
+        before { patch :update, id: new_question, question: { title: 'new title', body: nil}, format: :js }
+
+        it 'does not change question attributes' do
+          new_question.reload
+          expect(new_question.title).to eq title
+          expect(new_question.body).to eq body
+        end
+
+        it 're-renders edit view' do
+          expect(response).to render_template 'update'
+        end
       end
     end
   end

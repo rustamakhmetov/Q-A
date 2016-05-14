@@ -28,16 +28,19 @@ feature 'Removal of the author questions and answers', %q{
     expect(page).to_not have_content question.title
   end
 
-  scenario 'Authenticated author delete your answer' do
+  scenario 'Authenticated author delete your answer', js: true do
     sign_in(user)
 
     qpath = question_path(question)
     visit qpath
-    answer_anchor = "Delete answer #{question.answers.first.id}"
-    click_on answer_anchor
-    expect(page).to have_content 'Ответ успешно удален.'
+    answer = question.answers.first
+    within "div#answer#{answer.id}" do
+      click_on 'Delete'
+      wait_for_ajax
+    end
     expect(current_path).to eq qpath
-    expect(page).to_not have_link(answer_anchor)
+    expect(page).to_not have_selector("div#answer#{answer.id}")
+    expect(page).to have_content 'Ответ успешно удален.'
   end
 
   scenario 'Authenticated author can not delete other question' do

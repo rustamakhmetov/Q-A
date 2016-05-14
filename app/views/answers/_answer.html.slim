@@ -9,4 +9,4 @@
       p
         = link_to "Edit", '', class: 'edit-answer-link', data: {answer_id: answer.id}
       p
-        = link_to "Delete answer #{answer.id}", answer, method: :delete
+        = link_to "Delete", answer, method: :delete, remote: true

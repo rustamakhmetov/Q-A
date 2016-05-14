@@ -1,0 +1,10 @@
+$("p.alert").html('');
+$("p.notice").html('');
+
+<% flash.each do |type, message| %>
+  $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>");
+<% end %>
+
+<% if @answer.errors.empty? %>
+  $("div#answer<%= @answer.id %>").remove();
+<% end %>

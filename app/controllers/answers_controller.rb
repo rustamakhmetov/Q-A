@@ -30,11 +30,11 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      message = 'Ответ успешно удален.'
+      flash[:success] = 'Ответ успешно удален.'
     else
-      message = 'Запрешено удалять чужие ответы.'
+      flash[:error] = 'Запрешено удалять чужие ответы.'
     end
-    redirect_to question_path(@answer.question), notice: message
+    #redirect_to question_path(@answer.question), notice: message
   end
 
   private

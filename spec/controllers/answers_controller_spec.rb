@@ -141,17 +141,19 @@ RSpec.describe AnswersController, type: :controller do
     before { answer }
 
     it 'author deletes answer' do
-      expect {delete :destroy, id: answer, question_id: question}.to change(Answer, :count).by(-1)
+      expect {delete :destroy, id: answer, question_id: question, format: :js}.to change(Answer, :count).by(-1)
+      expect(flash[:success]).to eq "Ответ успешно удален."
     end
 
     it 'non-author deletes answer' do
       new_answer = create(:answer, user: create(:user), question: question)
-      expect {delete :destroy, id: new_answer, question_id: question}.to_not change(Answer, :count)
+      expect {delete :destroy, id: new_answer, question_id: question, format: :js}.to_not change(Answer, :count)
+      expect(flash[:error]).to eq 'Запрешено удалять чужие ответы.'
     end
 
     it 'redirects to index view' do
-      delete :destroy, id: answer, question_id: question
-      expect(response).to redirect_to question_path(question)
+      delete :destroy, id: answer, question_id: question, format: :js
+      expect(response).to render_template 'destroy'
     end
   end
 

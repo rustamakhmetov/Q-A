@@ -17,10 +17,10 @@ class AnswersController < ApplicationController
 
   def update
     if current_user.author_of?(@answer)
-      if @answer.update(answer_params)
-        #redirect_to @answer
-      else
-        render :edit
+      unless @answer.update(answer_params)
+        @answer.errors.each_with_index do |x, i|
+          flash["error#{i}".to_sym] = x[0].to_s.humanize+" "+x[1]
+        end
       end
     else
       flash[:error] = "Only the author can edit answer"

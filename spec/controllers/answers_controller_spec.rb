@@ -83,10 +83,11 @@ RSpec.describe AnswersController, type: :controller do
         it 'does not change answer attributes' do
           answer.reload
           expect(answer.body).to eq body
+          expect(flash[:error0]).to eq "Body can't be blank"
         end
 
         it 're-renders edit view' do
-          expect(response).to render_template :edit
+          expect(response).to render_template 'update'
         end
       end
     end

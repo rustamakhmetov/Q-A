@@ -10,27 +10,19 @@ RSpec.describe Answer, type: :model do
 
   describe 'accept answer' do
     let(:question) { create(:question) }
-    let(:answer1) { create(:answer, question: question, id: 3) }
-    let(:answer2) { create(:answer, question: question, accept: true, id: 2) }
-    let(:answer3) { create(:answer, question: question, id: 1) }
+    let!(:answer1) { create(:answer, question: question, id: 3) }
+    let!(:answer2) { create(:answer, question: question, accept: true, id: 2) }
+    let!(:answer3) { create(:answer, question: question, id: 1) }
 
     context 'with valid attributes'  do
       context 'accept answer1' do
-        subject { lambda { answer1.accept! } }
-
-        it { should change { answer1.reload.accept }.from(false).to(true) }
-        it { should change { answer2.reload.accept }.from(true).to(false) }
+        it { expect { answer1.accept! }.to change { answer1.reload.accept }.from(false).to(true) }
+        it { expect { answer1.accept! }.to change { answer2.reload.accept }.from(true).to(false) }
+        it { expect { answer1.accept! }.to_not change { answer3.reload.accept }.from(false) }
       end
     end
 
     context 'with invalid attributes'  do
-      # context 'answer is nil' do
-      #   subject { lambda { question.accept(nil) } }
-      #
-      #   it { should_not change { answer1.reload.accept }.from(false) }
-      #   it { should_not change { answer2.reload.accept }.from(true) }
-      # end
-
       context 'answer not belongs to question' do
         subject { lambda { create(:answer, question: create(:question)).accept! } }
 

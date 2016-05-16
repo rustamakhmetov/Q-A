@@ -121,10 +121,11 @@ RSpec.describe QuestionsController, type: :controller do
           question.reload
           expect(question.title).to eq title
           expect(question.body).to eq 'MyText'
+          expect(flash[:error0]).to eq "Body can't be blank"
         end
 
         it 're-renders edit view' do
-          expect(response).to render_template :edit
+          expect(response).to render_template 'update'
         end
       end
     end

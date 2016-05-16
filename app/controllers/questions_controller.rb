@@ -32,7 +32,9 @@ class QuestionsController < ApplicationController
       if @question.update(question_params)
         flash[:success] = "Вопрос успешно обновлен."
       else
-        render :edit
+        @question.errors.each_with_index do |x, i|
+          flash["error#{i}".to_sym] = x[0].to_s.humanize+" "+x[1]
+        end
       end
     else
       flash[:error] = "Only the author can edit question"

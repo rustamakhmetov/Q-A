@@ -5,6 +5,6 @@ $("p.notice").html('');
   $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>");
 <% end %>
 
-<% if @question.errors.empty? %>
-  $("div#answers").html("<%= j render @question.answers %>");
+<% if @answer.errors.empty? %>
+  $("div#answers").html("<%= j render @answer.question.answers %>");
 <% end %>

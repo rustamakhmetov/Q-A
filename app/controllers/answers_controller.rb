@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_answer, only: [:edit, :update, :destroy]
-  before_action :set_question, only: [:create]
+  before_action :set_answer, only: [:edit, :update, :destroy, :accept]
+  before_action :set_question, only: [:create, :accept]
 
   def edit
   end
@@ -37,10 +37,22 @@ class AnswersController < ApplicationController
     #redirect_to question_path(@answer.question), notice: message
   end
 
+  def accept
+    if current_user.author_of?(@answer.question)
+      @answer.accept!
+    else
+      flash[:error] = "Только автор вопроса может принимать ответ"
+    end
+  end
+
   private
 
   def set_answer
-    @answer = Answer.find_by_id(params[:id])
+    if params.has_key?(:answer_id)
+      @answer = Answer.find_by_id(params[:answer_id])
+    else
+      @answer = Answer.find_by_id(params[:id])
+    end
   end
 
   def set_question

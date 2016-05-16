@@ -158,4 +158,77 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #accept' do
+    sign_in_user
+
+    #let!(:question) { create(:question_with_answers, user: @user || create(:user), answers_count: 2) }
+
+    #before { question }
+
+    describe 'by Author question' do
+      let!(:answer1) { create(:answer, question: question, user: @user) }
+      let!(:answer2) { create(:answer, question: question, user: @user) }
+
+      #before { answer1 }
+
+      it 'assigns the requested params' do
+        patch :accept, answer_id: answer1, format: :js
+        expect(assigns(:answer)).to eq answer1
+        expect(flash[:error]).to eq nil
+      end
+
+      it 'accept answer' do
+        expect(answer1.accept).to eq false
+        expect(answer2.accept).to eq false
+        patch :accept, answer_id: answer1, format: :js
+        expect(flash[:error]).to eq nil
+        answer1.reload
+        answer2.reload
+        expect(answer1.accept).to eq true
+        expect(answer2.accept).to eq false
+      end
+
+      it 'change accept answer' do
+        expect(answer1.accept).to eq false
+        expect(answer2.accept).to eq false
+        patch :accept, answer_id: answer1, format: :js
+        patch :accept, answer_id: answer2, format: :js
+        answer1.reload
+        answer2.reload
+        expect(answer1.accept).to eq false
+        expect(answer2.accept).to eq true
+      end
+
+      it 'render accept view' do
+        patch :accept, answer_id: answer1, format: :js
+        expect(response).to render_template 'accept'
+      end
+
+    end
+
+    describe 'by Non-author question' do
+      let(:question) { create(:question, user: create(:user)) }
+      let(:answer1) { create(:answer, question: question, user: create(:user), accept: true) }
+      let(:answer2) { create(:answer, question: question, user: create(:user)) }
+
+      it 'not change accept answer' do
+        expect(answer1.accept).to eq true
+        expect(answer2.accept).to eq false
+        patch :accept, answer_id: answer2, format: :js
+        answer1.reload
+        answer2.reload
+        expect(answer1.accept).to eq true
+        expect(answer2.accept).to eq false
+      end
+
+      it 'render accept view' do
+        patch :accept, answer_id: answer1, format: :js
+        expect(response).to render_template 'accept'
+      end
+    end
+
+  end
+
+
+
 end

@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, only: [:show, :edit, :update, :destroy]
+  before_action :set_question, only: [:show, :edit, :update, :destroy, :accept]
 
   def index
     @questions = Question.all
@@ -47,6 +47,13 @@ class QuestionsController < ApplicationController
       message = 'Запрешено удалять чужие вопросы.'
     end
     redirect_to questions_path, notice: message
+  end
+
+  def accept
+    if current_user.author_of?(@question)
+      answer = Answer.find_by_id(params[:answer_id])
+      @question.accept(answer)
+    end
   end
 
   private

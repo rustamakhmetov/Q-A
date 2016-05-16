@@ -1,5 +1,7 @@
 - if answer.persisted?
   div id='answer#{answer.id}'
+    - if answer.accept
+      div.accept
     = answer.body
     - if current_user && current_user.author_of?(answer)
       = form_for answer, method: "patch", remote: true do |f|
@@ -10,3 +12,7 @@
         = link_to "Edit", '', class: 'edit-answer-link', data: {answer_id: answer.id}
       p
         = link_to "Delete", answer, method: :delete, remote: true
+    - if !answer.accept && current_user && current_user.author_of?(answer.question)
+      p
+        = link_to "Accept", accept_question_path(answer.question, answer_id: answer),
+                class: 'accept-answer-link', remote: true, method: :patch

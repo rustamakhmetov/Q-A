@@ -14,5 +14,5 @@
         = link_to "Delete", answer, method: :delete, remote: true
     - if !answer.accept && current_user && current_user.author_of?(answer.question)
       p
-        = link_to "Accept", answer_accept_path(answer),
+        = link_to "Accept", accept_answer_path(answer),
                 class: 'accept-answer-link', remote: true, method: :patch

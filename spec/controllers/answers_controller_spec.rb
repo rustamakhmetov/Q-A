@@ -172,7 +172,7 @@ RSpec.describe AnswersController, type: :controller do
       #before { answer1 }
 
       it 'assigns the requested params' do
-        patch :accept, answer_id: answer1, format: :js
+        patch :accept, id: answer1, format: :js
         expect(assigns(:answer)).to eq answer1
         expect(flash[:error]).to eq nil
       end
@@ -180,7 +180,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'accept answer' do
         expect(answer1.accept).to eq false
         expect(answer2.accept).to eq false
-        patch :accept, answer_id: answer1, format: :js
+        patch :accept, id: answer1, format: :js
         expect(flash[:error]).to eq nil
         answer1.reload
         answer2.reload
@@ -191,8 +191,8 @@ RSpec.describe AnswersController, type: :controller do
       it 'change accept answer' do
         expect(answer1.accept).to eq false
         expect(answer2.accept).to eq false
-        patch :accept, answer_id: answer1, format: :js
-        patch :accept, answer_id: answer2, format: :js
+        patch :accept, id: answer1, format: :js
+        patch :accept, id: answer2, format: :js
         answer1.reload
         answer2.reload
         expect(answer1.accept).to eq false
@@ -200,7 +200,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'render accept view' do
-        patch :accept, answer_id: answer1, format: :js
+        patch :accept, id: answer1, format: :js
         expect(response).to render_template 'accept'
       end
 
@@ -214,7 +214,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'not change accept answer' do
         expect(answer1.accept).to eq true
         expect(answer2.accept).to eq false
-        patch :accept, answer_id: answer2, format: :js
+        patch :accept, id: answer2, format: :js
         answer1.reload
         answer2.reload
         expect(answer1.accept).to eq true
@@ -222,7 +222,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'render accept view' do
-        patch :accept, answer_id: answer1, format: :js
+        patch :accept, id: answer1, format: :js
         expect(response).to render_template 'accept'
       end
     end

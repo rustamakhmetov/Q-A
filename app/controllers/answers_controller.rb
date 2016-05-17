@@ -48,11 +48,7 @@ class AnswersController < ApplicationController
   private
 
   def set_answer
-    if params.has_key?(:answer_id)
-      @answer = Answer.find_by_id(params[:answer_id])
-    else
-      @answer = Answer.find_by_id(params[:id])
-    end
+    @answer = Answer.find_by_id(params[:id])
   end
 
   def set_question

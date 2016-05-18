@@ -6,6 +6,14 @@
   p
     | Body:
     = question.body
+
+  p
+    | Attachments:
+  ul
+    - @question.attachments.each do |a|
+      li= a.file.file.filename
+
+  p
   - if current_user && current_user.author_of?(question)
     = form_for question, remote: true do |f|
       p

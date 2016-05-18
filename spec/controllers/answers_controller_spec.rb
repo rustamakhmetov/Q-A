@@ -4,20 +4,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question_with_answers, user: @user) }
   let(:answer) { question.answers.first }
 
-  describe 'GET #edit' do
-    sign_in_user
-
-    before { get 'edit', id: answer}
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     sign_in_user
 
@@ -83,7 +69,7 @@ RSpec.describe AnswersController, type: :controller do
         it 'does not change answer attributes' do
           answer.reload
           expect(answer.body).to eq body
-          expect(flash[:error0]).to eq "Body can't be blank"
+          expect(flash[:error]).to eq ["Body can't be blank"]
         end
 
         it 're-renders edit view' do
@@ -109,7 +95,7 @@ RSpec.describe AnswersController, type: :controller do
           patch :update, id: new_answer, answer: { body: 'new body 43433'}, format: :js
           new_answer.reload
           expect(new_answer.body).to eq body
-          expect(flash[:error]).to eq "Only the author can edit answer"
+          expect(flash[:error]).to eq ["Only the author can edit answer"]
         end
 
         it 'render updated answer' do
@@ -125,7 +111,7 @@ RSpec.describe AnswersController, type: :controller do
           body = new_answer.body
           new_answer.reload
           expect(new_answer.body).to eq body
-          expect(flash[:error]).to eq "Only the author can edit answer"
+          expect(flash[:error]).to eq ["Only the author can edit answer"]
         end
 
         it 're-renders update view' do
@@ -133,7 +119,6 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
     end
-
   end
 
   describe 'DELETE #destroy' do
@@ -143,13 +128,13 @@ RSpec.describe AnswersController, type: :controller do
 
     it 'author deletes answer' do
       expect {delete :destroy, id: answer, question_id: question, format: :js}.to change(Answer, :count).by(-1)
-      expect(flash[:success]).to eq "Ответ успешно удален."
+      expect(flash[:success]).to eq ["Ответ успешно удален."]
     end
 
     it 'non-author deletes answer' do
       new_answer = create(:answer, user: create(:user), question: question)
       expect {delete :destroy, id: new_answer, question_id: question, format: :js}.to_not change(Answer, :count)
-      expect(flash[:error]).to eq 'Запрешено удалять чужие ответы.'
+      expect(flash[:error]).to eq ['Запрешено удалять чужие ответы.']
     end
 
     it 'redirects to index view' do
@@ -161,15 +146,9 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #accept' do
     sign_in_user
 
-    #let!(:question) { create(:question_with_answers, user: @user || create(:user), answers_count: 2) }
-
-    #before { question }
-
     describe 'by Author question' do
       let!(:answer1) { create(:answer, question: question, user: @user) }
       let!(:answer2) { create(:answer, question: question, user: @user) }
-
-      #before { answer1 }
 
       it 'assigns the requested params' do
         patch :accept, id: answer1, format: :js
@@ -226,9 +205,5 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template 'accept'
       end
     end
-
   end
-
-
-
 end

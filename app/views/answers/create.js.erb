@@ -1,9 +1,4 @@
-$("p.alert").html('');
-$("p.notice").html('');
-
-<% flash.each do |type, message| %>
-  $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>");
-<% end %>
+<%= render 'layouts/flash_messages' %>
 
 <% if @answer.errors.empty? %>
   $(".answers").append("<%= j render @answer %>");

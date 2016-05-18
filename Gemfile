@@ -28,6 +28,7 @@ gem 'twitter-bootstrap-rails'
 gem 'slim-rails'
 gem 'devise'
 gem 'devise-i18n-views'
+gem 'jquery-turbolinks'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -43,6 +44,11 @@ group :development, :test do
   gem 'factory_girl_rails'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'capybara-webkit'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'capybara-email'
 end
 
 group :development do
@@ -55,11 +61,6 @@ group :development do
 end
 
 group :test do
-  gem 'database_cleaner'
   gem 'shoulda-matchers'
-  gem 'capybara'
-  gem 'launchy'
-  gem 'capybara-email'
   gem 'email_spec'
-  gem 'selenium-webdriver'
 end

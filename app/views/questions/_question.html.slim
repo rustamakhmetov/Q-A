@@ -1,0 +1,19 @@
+.question
+  p
+    | Title:
+    = question.title
+
+  p
+    | Body:
+    = question.body
+  - if current_user && current_user.author_of?(question)
+    = form_for question, remote: true do |f|
+      p
+        =f.label :title, 'Title'
+        =f.text_field :title
+      p
+        =f.label :body, 'Your question'
+        =f.text_area :body
+      p
+        =f.submit 'Save'
+    p=link_to 'Edit', '', class: "edit-question-link", data: {question_id: question.id}

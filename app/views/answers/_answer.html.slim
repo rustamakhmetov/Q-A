@@ -1,5 +1,18 @@
-div id='answer#{answer.id}'
-  = answer.body
-  - if current_user && current_user.author_of?(answer)
-    p
-      = link_to "Delete answer #{answer.id}", answer, method: :delete
+- if answer.persisted?
+  div id='answer#{answer.id}'
+    - if answer.accept
+      div.accept
+    = answer.body
+    - if current_user && current_user.author_of?(answer)
+      = form_for answer, method: "patch", remote: true do |f|
+        =f.label :body, 'Your answer'
+        =f.text_area :body
+        =f.submit 'Save'
+      p
+        = link_to "Edit", '', class: 'edit-answer-link', data: {answer_id: answer.id}
+      p
+        = link_to "Delete", answer, method: :delete, remote: true
+    - if !answer.accept && current_user && current_user.author_of?(answer.question)
+      p
+        = link_to "Accept", accept_answer_path(answer),
+                class: 'accept-answer-link', remote: true, method: :patch

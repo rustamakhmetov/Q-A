@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'Create questions and answers', %q{
   In order to be able solved problem or to get answer from community

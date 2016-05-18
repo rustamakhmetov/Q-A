@@ -7,6 +7,7 @@ FactoryGirl.define do
     user
     question
     body
+    accept false
   end
 
   factory :invalid_answer, class: "Answer" do

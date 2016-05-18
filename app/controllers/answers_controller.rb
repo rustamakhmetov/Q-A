@@ -1,36 +1,44 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_answer, only: [:edit, :update, :destroy]
-  before_action :set_question, only: [:create]
-
-  def edit
-  end
+  before_action :set_answer, only: [:update, :destroy, :accept]
+  before_action :set_question, only: [:create, :accept]
 
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
-      flash[:success] = "Ответ успешно добавлен"
+      flash_message :success, "Ответ успешно добавлен"
     else
-      flash[:error] = @answer.errors.full_messages.join("\n")
+      errors_to_flash(@answer)
     end
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @answer
+    if current_user.author_of?(@answer)
+      if @answer.update(answer_params)
+        flash_message :success, "Ваш ответ успешно обновлен"
+      else
+        errors_to_flash(@answer)
+      end
     else
-      render :edit
+      flash_message :error, "Only the author can edit answer"
     end
   end
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      message = 'Ответ успешно удален.'
+      flash_message :success, 'Ответ успешно удален.'
     else
-      message = 'Запрешено удалять чужие ответы.'
+      flash_message :error, 'Запрешено удалять чужие ответы.'
     end
-    redirect_to question_path(@answer.question), notice: message
+  end
+
+  def accept
+    if current_user.author_of?(@answer.question)
+      @answer.accept!
+    else
+      flash_message :error, "Только автор вопроса может принимать ответ"
+    end
   end
 
   private

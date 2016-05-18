@@ -1,14 +1,9 @@
-p
-  | Title:
-  = @question.title
-
-p
-  | Body:
-  = @question.body
+= render @question
 
 .answers
   | Answers:
-  = render @question.answers
+  div id='answers'
+    = render @question.answers
 
 - if current_user && current_user.author_of?(@question)
     p

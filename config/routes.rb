@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
-    resources :answers, shallow: true, except: [:index, :show, :new]
+    resources :answers, shallow: true, except: [:index, :show, :new, :edit] do
+      patch 'accept', on: :member
+    end
   end
   resources :users
 

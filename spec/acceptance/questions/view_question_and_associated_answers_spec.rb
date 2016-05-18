@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature "View question and associated answers", %q{
   In order to be able solved my problem

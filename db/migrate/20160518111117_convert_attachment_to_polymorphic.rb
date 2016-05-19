@@ -1,7 +1,7 @@
 class ConvertAttachmentToPolymorphic < ActiveRecord::Migration
   def change
-    remove_index :attachments, :question_id
-    rename_column :attachments, :question_id, :attachmentable_id
+    #remove_index :attachments, :question_id
+    add_column :attachments, :attachmentable_id, :integer
     add_index :attachments, :attachmentable_id
 
     add_column :attachments, :attachmentable_type, :string

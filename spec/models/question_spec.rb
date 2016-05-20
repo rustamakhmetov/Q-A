@@ -12,13 +12,18 @@ describe Question do
   describe "Attachments" do # the has_many association
     let(:user) { create(:user) }
 
+    subject(:test_file) do
+      lambda do
+        ActionDispatch::Http::UploadedFile.new({
+           :filename => 'spec_helper.rb',
+           :tempfile => File.new("#{Rails.root}/spec/spec_helper.rb")
+        })
+      end
+    end
+
     describe "save with" do
       it "valid attributes" do
-        test_photo = ActionDispatch::Http::UploadedFile.new({
-                    :filename => 'spec_helper.rb',
-                    :tempfile => File.new("#{Rails.root}/spec/spec_helper.rb")
-        })
-        q = Question.new(attributes_for(:question).merge(user: user, attachments_attributes: [{file: test_photo}]))
+        q = Question.new(attributes_for(:question).merge(user: user, attachments_attributes: [{file: test_file.call}]))
         expect{ q.save }.to change(Question, :count).by(1).and change(Attachment, :count).by(1)
       end
 
@@ -29,12 +34,7 @@ describe Question do
     end
 
     it "allows destroy attribute" do
-      files = 3.times.collect do |i|
-        ActionDispatch::Http::UploadedFile.new({
-           :filename => "spec_helper#{i}.rb",
-           :tempfile => File.new("#{Rails.root}/spec/spec_helper.rb") })
-      end
-      attachments_attributes = files.collect { |obj| {file: obj} }
+      attachments_attributes = 3.times.collect { {file: test_file.call } }
 
       expect(Attachment.all.count).to eq 0
       q = Question.new(attributes_for(:question).merge(user: user, attachments_attributes: attachments_attributes))

@@ -1,7 +1,8 @@
 # encoding: utf-8
 
 class FileUploader < CarrierWave::Uploader::Base
-  delegate :filename, to: :file
+  delegate :filename, to: :file, allow_nil: true
+
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick

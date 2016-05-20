@@ -26,9 +26,7 @@ module ApplicationHelper
 
   def errors_to_flash(model)
     if model && model.respond_to?(:errors) && model.errors.present?
-      model.errors.each do |k, v|
-        flash_message :error, k.to_s.humanize+" "+v
-      end
+      model.errors.full_messages.each { |m| flash_message :error, m }
     end
   end
 end

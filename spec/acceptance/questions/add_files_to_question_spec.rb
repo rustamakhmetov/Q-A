@@ -36,5 +36,13 @@ feature 'Add files to question', %q{
     expect(page).to have_link 'spec_helper.rb', href: "#{Rails.root}/spec/tmp/uploads/attachment/file/3/spec_helper.rb"
   end
 
+  scenario 'User visual adds and remove multiple file fields when asks question', js: true do
+    click_on 'add file'
+    within(:xpath, '//div[@id="attachments"]/div[@class="nested-fields"][2]') do
+      click_on 'remove file'
+    end
+    expect(page).to_not have_selector(:xpath, '//div[@id="attachments"]/div[@class="nested-fields"][2]')
+  end
+
 
 end

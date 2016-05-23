@@ -1,9 +1,6 @@
-- if defined?(a)
-  .nested-fields
-    .field
-      = a.label :file
-    .field
-      = a.file_field :file
-  = link_to_remove_association "remove file", a
-- else
-    = "stop"
+.nested-fields
+  .field
+    = f.label :file
+  .field
+    = f.file_field :file
+  = link_to_remove_association "remove file", f

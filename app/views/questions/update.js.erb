@@ -7,4 +7,5 @@ $("p.notice").html('');
 
 <% if @question.errors.empty? %>
   $(".question").html("<%= j render @question %>");
+  $('.edit-question-link').show();
 <% end %>

@@ -17,21 +17,19 @@ feature 'Edit question', %q{
     end
 
     scenario 'see edit link' do
-      within '.question' do
-        expect(page).to have_link('Edit')
-      end
+      expect(page).to have_xpath('//a[@data-question-id="%s"]' % question.id) # Edit
     end
 
     scenario 'edit question', js: true do
       within '.question' do
         expect(page).to_not have_selector("textarea")
-        click_on 'Edit'
+        find(:xpath, '//a[@data-question-id="%s"]' % question.id).click
         expect(page).to_not have_link('Edit')
         expect(page).to have_selector("textarea")
         fill_in 'Your question', with: 'new question'
         click_on 'Save'
         expect(page).to_not have_selector("textarea")
-        expect(page).to have_link('Edit')
+        expect(page).to have_xpath('//a[@data-question-id="%s"]' % question.id) # Edit
         expect(page).to_not have_content(question.body)
         expect(page).to have_content('new question')
       end

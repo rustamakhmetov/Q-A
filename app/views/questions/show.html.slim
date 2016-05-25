@@ -7,14 +7,6 @@
     div.col-lg-2
       = link_to 'Delete question', @question, method: :delete, class: "btn btn-danger btn-sm"
 
-  div.row
-    div.col-lg-4
-      button.btn.btn-default[type="button"]
-        | Стандартная
-    div.col-lg-5
-      button.btn.btn-primary[type="button"]
-        | Основная
-
 .answers
   | Answers:
   div.row id='answers'
@@ -27,8 +19,10 @@
     = f.text_area :body
   p Attachments
   p
-  = f.fields_for :attachments do |a|
-    = a.label :file
-    = a.file_field :file
+  #attachments
+    = f.fields_for :attachments do |a|
+      = render 'attachment_fields', f: a
+      .links
+        = link_to_add_association 'add file', f, :attachments
   p
     = f.submit 'Ask answer'

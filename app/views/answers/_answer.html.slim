@@ -7,12 +7,18 @@
       | Attachments:
     ul
       - answer.attachments.each do |a|
-        li= link_to a.file.filename, a.file.url
+        div id='attachment#{a.id}'
+          li
+            = link_to a.file.filename, a.file.url
+
     p
     - if current_user && current_user.author_of?(answer)
       = form_for answer, method: "patch", remote: true do |f|
         =f.label :body, 'Your answer'
         =f.text_area :body
+        =f.fields_for :attachments do |attach|
+          = render 'answers/attachment_fields', f: attach
+          /= link_to_add_association 'add file', f, :attachments
         =f.submit 'Save'
       p
         = link_to "Edit", '', class: 'edit-answer-link', data: {answer_id: answer.id}

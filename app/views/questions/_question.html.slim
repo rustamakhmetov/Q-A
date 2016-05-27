@@ -23,4 +23,13 @@
         =f.label :body, 'Your question'
         =f.text_area :body
       p
+        = f.fields_for :attachments do |attach|
+          = render 'attachment_fields', f: attach
+      p
         =f.submit 'Save'
+
+    div.row
+      div.col-lg-1
+        = link_to 'Edit', '', class: "edit-question-link btn btn-primary btn-sm", data: {question_id: @question.id}
+      div.col-lg-2
+        = link_to 'Delete question', @question, method: :delete, class: "btn btn-danger btn-sm"

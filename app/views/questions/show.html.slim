@@ -2,16 +2,20 @@
 
 .answers
   | Answers:
-  div id='answers'
+  div.row id='answers'
     = render @question.answers
 
-- if current_user && current_user.author_of?(@question)
-    p
-      = link_to 'Delete question', @question, method: :delete
 
 = form_for [@question ,@answer], remote: true do |f|
   p
     = f.label :body
     = f.text_area :body
+  p Attachments
+  p
+  #attachments
+    = f.fields_for :attachments do |a|
+      = render 'attachment_fields', f: a
+      .links
+        = link_to_add_association 'add file', f, :attachments
   p
     = f.submit 'Ask answer'

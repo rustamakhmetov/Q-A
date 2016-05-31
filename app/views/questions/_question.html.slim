@@ -6,6 +6,14 @@
   p
     | Body:
     = question.body
+
+  p
+    | Attachments:
+  ul
+    - @question.attachments.each do |a|
+      li= link_to a.file.filename, a.file.url
+
+  p
   - if current_user && current_user.author_of?(question)
     = form_for question, remote: true do |f|
       p
@@ -15,5 +23,13 @@
         =f.label :body, 'Your question'
         =f.text_area :body
       p
+        = f.fields_for :attachments do |attach|
+          = render 'attachment_fields', f: attach
+      p
         =f.submit 'Save'
-    p=link_to 'Edit', '', class: "edit-question-link", data: {question_id: question.id}
+
+    div.row
+      div.col-lg-1
+        = link_to 'Edit', '', class: "edit-question-link btn btn-primary btn-sm", data: {question_id: @question.id}
+      div.col-lg-2
+        = link_to 'Delete question', @question, method: :delete, class: "btn btn-danger btn-sm"
